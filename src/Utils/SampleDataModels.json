@@ -1,0 +1,32 @@
+[
+    {
+        "id": "ARIMA",
+        "name": "ARIMA",
+        "description": "A forecasting model that uses historical sales or demand data to identify patterns, trends, and fluctuations over time. It focuses on past behavior to predict future outcomes, making it suitable for stable, non-seasonal data. Exogenous variables are not required."
+    },
+    {
+        "id": "ARIMAX",
+        "name": "ARIMAX",
+        "description": "An extension of ARIMA that incorporates additional influencing factors like promotions, pricing, holidays, etc. This helps in understanding how these external variables impact sales trends and provides a more precise forecast. Exogenous variables are mandatory."
+    },
+    {
+        "id": "SARIMA",
+        "name": "SARIMA",
+        "description": "The SARIMA model builds upon ARIMA by incorporating seasonal effects, allowing it to capture recurring patterns across specific time intervals.Exogenous variables are not required."
+    },
+    {
+        "id": "SARIMAX",
+        "name": "SARIMAX",
+        "description": "Combines the seasonal patterns from SARIMA with external drivers like marketing campaigns and economic conditions. This results in a more holistic and accurate forecast by capturing both seasonality and external influences.Exogenous variables are mandatory."
+    },
+    {
+        "id": "XGBOOST",
+        "name": "XGBOOST",
+        "description": "Gradient boosting framework that uses tree-based learning algorithms. Extremely powerful for time series forecasting with its ability to handle complex patterns, missing values, and feature interactions automatically. Highly efficient and scalable with built-in regularization to prevent overfitting."
+    },
+    {
+        "id": "LIGHTGBM",
+        "name": "LIGHTGBM",
+        "description": "Light Gradient Boosting Machine optimized for speed and performance with large datasets. Uses histogram-based learning and leaf-wise tree growth for faster training. Perfect for high-dimensional time series data with excellent memory efficiency and superior accuracy on structured data."
+    }
+]

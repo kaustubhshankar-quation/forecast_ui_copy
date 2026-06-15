@@ -1,0 +1,120 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+
+:root {
+  --main-bg-color: #f4f3ef;
+  --stage3-data-panel-height: 580px;
+  font-family: 'Poppins', 'Inter', Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
+}
+
+h1, .main-h1 {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
+  font-size: 35px !important;
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+h2, .main-h2 {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
+  font-size: 28px;
+  font-weight: 600;
+}
+h3, .main-h3 {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
+  font-size: 22px;
+  font-weight: 500;
+}
+h4, .main-h4 {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
+  font-size: 18px;
+  font-weight: 500;
+}
+h5, .main-h5 {
+  font-family: 'Poppins', 'Inter', Arial, sans-serif !important;
+  font-size: 16px;
+  font-weight: 500;
+}
+p, .main-p {
+  font-family: 'Inter', 'Poppins', Arial, sans-serif !important;
+  font-size: 18px;
+  font-weight: 400;
+}
+
+.mainbgcolor {
+  background-color: var(--main-bg-color);
+}
+
+.active-link {
+  font-weight: bold !important;
+}
+
+/* file upload button */
+input[type="file"]::file-selector-button {
+  border-radius: 4px;
+  padding: 0 16px;
+  height: 100%;
+  cursor: pointer;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.16);
+  box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.05);
+  margin-right: 16px;
+  transition: background-color 200ms;
+}
+
+/* file upload button hover state */
+input[type="file"]::file-selector-button:hover {
+  background-color: #f3f4f6;
+}
+
+/* file upload button active state */
+input[type="file"]::file-selector-button:active {
+  background-color: #e5e7eb;
+}
+
+.visible {
+  display: block;
+}
+
+.hidden {
+  display: none;
+}
+
+.highlighted {
+  border: #AC1424 1px solid !important;
+  box-shadow: none !important;
+}
+
+.lblinfo {
+  color: #0C3C54 !important;
+}
+
+.download-link {
+  cursor: pointer;
+}
+
+.lblerror {
+  color: #AC1424 !important;
+}
+
+.lblsuccess {
+  color: green !important;
+}
+
+.sticky-div {
+  position: relative !important;
+  width: 100%;
+  background-color: yellow;
+  padding: 10px;
+  opacity: 0.5;
+  z-index: 1;
+  /* Ensures it stays above other elements */
+}

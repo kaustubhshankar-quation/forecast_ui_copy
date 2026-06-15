@@ -1,0 +1,48 @@
+@keyframes bellSwing {
+  0%   { transform: rotate(0deg); }
+  20%  { transform: rotate(-18deg); }
+  40%  { transform: rotate(16deg); }
+  60%  { transform: rotate(-12deg); }
+  80%  { transform: rotate(8deg); }
+  100% { transform: rotate(0deg); }
+}
+
+/* Hover effect for bell icon specifically */
+.kpi-icon:hover {
+  animation: bellSwing 0.7s cubic-bezier(.36,.07,.19,.97) both;
+  /* You can also add scale if you want to combine: */
+  transform: scale(1.12);
+}
+
+.waving-hand {
+  display: inline-block;
+  animation: wave-hand 1.6s infinite;
+  transform-origin: 70% 70%;
+}
+
+@keyframes wave-hand {
+  0% { transform: rotate(0deg); }
+  10% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  30% { transform: rotate(14deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+  60% { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
+
+/* // Styles for WorkflowReportMenu component */
+.slick-slide {
+  height: auto !important;
+}
+
+.slick-track {
+  display: flex !important;
+}
+
+.slick-slide > div {
+  display: flex !important;
+  height: 100%;
+}
+

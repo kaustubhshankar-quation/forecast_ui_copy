@@ -1,0 +1,22 @@
+[
+    {
+        "title" : "Forecast model file",
+        "sample-file-path":"/sample_files/ForecastSheet.csv",
+        "sheetname" : "ForecastFile"
+    },
+    {
+        "title" : "EOQ file",
+        "sample-file-path":"/sample_files/EOQFile.csv",
+        "sheetname" : "EOQFile"
+    },
+    {
+        "title" : "Inventory file",
+        "sample-file-path":"/sample_files/InventoryFile.csv",
+        "sheetname" : "InventoryFile"
+    },
+    {
+        "title" : "SafetyStock file",
+        "sample-file-path":"/sample_files/SafetyStock.csv",
+        "sheetname" : "SafetyStock"
+    }
+] 

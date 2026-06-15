@@ -1,0 +1,58 @@
+ul.createworkflowtab {
+    padding: 0px;
+    margin: 10px auto 0px auto;
+    text-align: left !important;
+    list-style-type: none;
+    z-index: 99;
+    position: relative;
+    width: 100%;
+    li{
+        display: inline;
+        margin: 0;
+        margin-right: 3px;
+        font-size: 14px;
+        border-radius: 5px 5px 0px 0px;
+        text-decoration: none;
+        position: relative;
+        padding: 24px 7px 20px 7px;
+        color: #0C3C54;
+        outline: none;
+
+        span{
+            background-color: #D9D9D9;
+            color: #0C3C54;
+            padding: 1px 6px;
+            font-size: 13px;
+            border-radius: 100px;
+            margin-right: 5px;
+        }
+        .selected{
+            color: #fff;
+            background-color: #0C3C54;
+            &:hover{
+                color: #fff;
+                background-color: #0C3C54;
+            }
+        }
+        &:hover{
+            color: #fff;
+            background-color: #0C3C54;
+        }
+    }
+}
+
+.selected{
+    color: #fff !important;
+    background-color: #0C3C54;
+}
+
+div.createworkflowtabcontents {
+    background-color: #fff;
+    float: left;
+    width: 100%;
+    margin-top: 1.4%;
+    padding: 20px 20px 40px 20px;
+    width: 100%;
+    z-index: 9;
+    position: relative;
+}

@@ -1,0 +1,265 @@
+#menutoggle {
+    display: block;
+    margin: 0px 0px 0px 0px;
+    padding: 0 15px;
+    width: auto;
+    color: #0C3C54;
+    background: #DEEDFA;
+    height: 45px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+    text-align: left;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: fixed;
+    right: 10px;
+    top: 2%;
+    border-radius: 4px;
+    transition: background 0.2s linear 0s;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+#menutoggle span {
+    display: none;
+}
+#menutoggle:before {
+	display: inline-block;
+	margin-left: 0;
+	width: 24px;
+	height: 45px;
+	line-height: 41px;
+	content: '☰';
+	color: inherit;
+	font-family: 'icons'; color: #174858;
+	text-align: center;
+	font-size: 27px;
+	vertical-align: top; font-weight:bold;
+}
+#menutoggle.is-active:before {
+	content: '✕'; line-height: 47px;
+}
+#menutoggle:hover, #menutoggle:active, #menutoggle.is-active {
+        background-color: #DEEDFA; color: #174858;
+}
+#menutoggle { display: block; }
+#nav {
+    clear: both;
+    margin: 2.8% 0px 0px 0px;
+    width: 100%;
+    height: 0;
+    overflow: visible;
+    position: relative;
+    z-index: 1000;
+    font-family: "Exo";
+}
+#nav ul {
+    float: none;
+    display: block;
+    margin: 0;
+    width: auto;
+    opacity: 0;
+	max-height: 0;
+    background: #37474f;
+    overflow: hidden;
+    transition: max-height 0.25s cubic-bezier(0, 0.7, 0, 1), opacity 0.2s ease-in-out;
+    top: 1px;
+    border: 0;
+    position: relative;
+}
+#nav #menutoggle.is-active + ul {
+    max-height: 1000px;
+	opacity: 1;
+	transition: max-height 0.3s ease-in-out, opacity 0.25s ease-in-out;
+}
+#nav li {
+    display: block;
+    margin: 0px 0px 0px 0px;
+    padding: 0;
+    height: auto;
+    overflow: hidden;
+    border: 0;
+}
+#nav li:first-child {
+    border-top: 0;
+}
+#nav li.onmobile {
+	display: block;
+}
+#nav a, #nav span.submenu , #nav button {
+    float: none;
+    display: block;
+    margin: 0;
+    padding: 9px 20px;
+    height: auto;
+    color: #fff;
+    line-height: 1.6em;
+    text-align: left;
+    font-size: 16px;
+    font-weight: normal;
+    border: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+	transition: background 0.17s linear 0s;
+}
+#nav span.submenu:after {
+    float: right;
+    margin-left: 10px;
+    width: 15px;
+    height: inherit;
+    content: '▶';
+    color: inherit;
+    font-family: 'icons';
+    text-align: center;
+    font-size: 105%;
+    vertical-align: top; 
+     transform: rotate(90deg);
+}
+#nav span.submenu.is-active {
+	border-bottom: 1px dotted #455a64;
+}
+#nav ul.submenu {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    max-height: 0;
+    background: none;
+    opacity: 1;
+    position: relative;
+    top: 0;
+	transition: max-height 0.15s linear 0s;
+}
+#nav span.submenu.is-active + ul.submenu {
+    max-height: 360px;
+    overflow-y: auto;
+}
+#nav ul.submenu a {
+    padding-left: 40px;
+    background: none;
+}
+
+/*----------------------------------------Menu Media-----------------------------------------*/
+@media (min-width: 36em) { /* Small devices (landscape phones, 576px and up) */
+  /*@media (min-width: 48em) { /* Medium devices (tablets, 768px and up) */
+      #menutoggle { padding: 0 15px 0 15px; }
+    #menutoggle span { display: inline-block; margin-top: 13px;}
+      #menutoggle:before { margin-right: 10px; }
+  
+  }
+  @media (min-width: 62em) { /* Large devices (desktops, 992px and up) */
+      #menutoggle { display: none; }
+      #nav {
+        
+          position: relative;
+          z-index: 99;
+          border: 0;
+       
+      }
+      #nav ul {
+          display: block !important;
+          float: left;
+          width: 100%;
+          height: auto;
+          opacity: 1; margin:0px;
+          position: relative;
+          z-index: 10;
+          top: 0;
+          overflow: visible;
+      }
+      #nav li {
+          float: left;
+          padding: 0;
+          position: relative;
+          border: 0;
+          overflow: visible;
+      }
+      #nav li:first-child {
+          border-left: 0;
+      }
+      #nav li.last {
+          border-right: 0;
+      }
+      #nav li.right {
+          float: right;
+          margin-right: 4px;
+          border-right: 0;
+      }
+      #nav li.onmobile {
+          display: none;
+      }
+          #nav a, #nav span.submenu ,#nav button{
+              float: left;
+              margin: 0;
+              border: 0;
+              transition: background 0.2s linear 0s;
+              cursor: pointer;
+              height: 100%;
+              color: #fff;
+              text-align: center;
+              letter-spacing: 1px;
+              font-size: 14px;
+              padding: 10px 25px 10px 25px;
+               font-family: 'Exo'; font-weight: 500;
+          }
+      #nav span.submenu:after {
+          display: none;
+      }
+              #nav a:hover, #nav li:hover span.submenu, #nav ul.submenu a:hover, #nav span.submenu.is-active {
+                border-bottom:1px solid #fff; border-radius: 20px;
+              }
+      #nav li:hover a.submenu, #nav li:hover span.submenu, #nav span.submenu.is-active.hover {
+        
+          -webkit-tap-highlight-color: rgba(0,0,0,0);
+      }
+      #nav li:hover {
+          z-index: 11;
+      }
+          #nav ul.submenu {
+              float: left;
+              margin: 0 0px 0px 0px;
+              padding: 0;
+              width: 250px;
+              max-height: 0;
+              position: absolute;
+              opacity: 0;
+              background: #15798e;
+              top: 95%;
+              z-index: 10;
+              border-radius: 0 3px 3px 3px;
+              box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+              transition: max-height 0.2s linear 0s, padding 0.2s linear 0s, opacity 0.2s linear 0s;
+              overflow: hidden;
+              overflow-y: auto;
+          }
+      #nav li:hover ul.submenu, #nav ul.submenu.is-active {
+      padding: 3px 0;
+          left: 0;
+      max-height: 360px;
+          opacity: 1;
+      }
+      #nav ul.submenu li {
+          float: none;
+          display: block;
+          margin: 0;
+          padding: 0;
+          border: 0;
+          height: auto;
+      }
+      #nav ul.submenu a {
+          float: none;
+          display: block;
+          margin: 0;
+          padding: 8px 10px 8px 10px;
+          height: auto;
+          text-transform: none;
+          text-align: left;
+          border-radius: 0;
+          border: 0;
+          border-top: 1px dashed #fff; color:#fff; font-size:13px;
+      }
+      #nav ul.submenu li:first-child a {
+          border: 0;
+      }
+              #nav ul.submenu li a:hover {
+                  background: #045161;
+                  color: #fff;
+                  padding: 8px 10px 8px 15px;
+              }
+  }
