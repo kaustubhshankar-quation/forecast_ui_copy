@@ -9,23 +9,32 @@ import {
   Clock3,
   BarChart3,
   ShieldCheck,
-  Database,
-  LineChart,
   CheckCircle2,
   Phone,
   Play,
+  Factory,
+  Cog,
+  HardHat,
+  Package,
+  Milk,
+  Boxes,
+  Store,
+  ShoppingBag,
+  ShoppingCart,
+  Cpu,
+  Laptop,
+  Server,
+  Pill,
+  Stethoscope,
+  FlaskConical,
 } from 'lucide-react'
 import * as images from '../assets/images'
-import UserService from '../services/UserService'
 import KeyBenefits from '../components/frontpage/KeyBenefits'
 import FeaturesSlider from '../components/frontpage/FeaturesSlider'
 import ArchitectureSection from '../components/frontpage/ArchitectureSection'
 import { createPortal } from 'react-dom';
-import { postRequest } from '../services/DataRequestService';
 import LoginPopup from '../components/frontpage/LoginPopup';
 import SignupPopup from '../components/frontpage/SignupPopup'
-
-import { displayMessage } from '../Utils/helper'
 
 /* ============================================================
    Landing content — short, scannable. Edit here.
@@ -36,6 +45,54 @@ const heroStats = [
   { value: '3', label: 'Granularities supported', icon: CalendarRange },
   { value: '24/7', label: 'Scheduled automation', icon: Clock3 },
   { value: '100%', label: 'Data validation', icon: ShieldCheck },
+];
+
+// Ambient floating dots for the hero (fixed values so they don't jump per render).
+const heroParticles = [
+  { left: '4%', size: 6, delay: 0, duration: 15, opacity: 0.5 },
+  { left: '9%', size: 4, delay: 3, duration: 18, opacity: 0.35 },
+  { left: '15%', size: 7, delay: 1.5, duration: 14, opacity: 0.45 },
+  { left: '21%', size: 5, delay: 4.5, duration: 16, opacity: 0.4 },
+  { left: '27%', size: 6, delay: 0.8, duration: 13, opacity: 0.5 },
+  { left: '33%', size: 4, delay: 3.5, duration: 19, opacity: 0.35 },
+  { left: '39%', size: 8, delay: 2, duration: 15, opacity: 0.45 },
+  { left: '45%', size: 5, delay: 5, duration: 17, opacity: 0.4 },
+  { left: '50%', size: 6, delay: 1.2, duration: 13, opacity: 0.5 },
+  { left: '55%', size: 4, delay: 4, duration: 18, opacity: 0.4 },
+  { left: '61%', size: 7, delay: 2.6, duration: 14, opacity: 0.45 },
+  { left: '67%', size: 5, delay: 0.5, duration: 16, opacity: 0.45 },
+  { left: '72%', size: 6, delay: 3.2, duration: 14, opacity: 0.5 },
+  { left: '77%', size: 4, delay: 5.5, duration: 19, opacity: 0.35 },
+  { left: '82%', size: 7, delay: 1.8, duration: 15, opacity: 0.45 },
+  { left: '87%', size: 5, delay: 4.2, duration: 17, opacity: 0.4 },
+  { left: '91%', size: 6, delay: 2.4, duration: 14, opacity: 0.5 },
+  { left: '95%', size: 4, delay: 0.9, duration: 18, opacity: 0.35 },
+  { left: '98%', size: 6, delay: 3.8, duration: 16, opacity: 0.45 },
+];
+
+// Icons drawn strictly from the supported industries — Manufacturing, CPG,
+// Retail, Technology, Pharma — floating and reacting to the cursor (antigravity).
+const heroIcons = [
+  // Manufacturing
+  { key: 'mfg-factory', Icon: Factory, top: '13%', left: '6%', size: 30, depth: 42, delay: 0, duration: 7.5 },
+  { key: 'mfg-cog', Icon: Cog, top: '18%', left: '47%', size: 26, depth: 30, delay: 2.1, duration: 7.6 },
+  { key: 'mfg-hardhat', Icon: HardHat, top: '86%', left: '64%', size: 26, depth: 28, delay: 1.7, duration: 9 },
+  // CPG (consumer packaged goods)
+  { key: 'cpg-package', Icon: Package, top: '84%', left: '40%', size: 26, depth: 26, delay: 0.5, duration: 9.4 },
+  { key: 'cpg-milk', Icon: Milk, top: '40%', left: '60%', size: 26, depth: 38, delay: 0.9, duration: 8.6 },
+  { key: 'cpg-boxes', Icon: Boxes, top: '52%', left: '43%', size: 28, depth: 32, delay: 0.4, duration: 9.5 },
+  // Retail
+  { key: 'retail-store', Icon: Store, top: '30%', left: '18%', size: 28, depth: 36, delay: 0.8, duration: 7 },
+  { key: 'retail-bag', Icon: ShoppingBag, top: '22%', left: '56%', size: 28, depth: 46, delay: 1.2, duration: 7.2 },
+  { key: 'retail-cart', Icon: ShoppingCart, top: '68%', left: '10%', size: 26, depth: 28, delay: 1.6, duration: 8.5 },
+  // Technology
+  { key: 'tech-cpu', Icon: Cpu, top: '80%', left: '24%', size: 26, depth: 24, delay: 2.3, duration: 9 },
+  { key: 'tech-laptop', Icon: Laptop, top: '46%', left: '13%', size: 28, depth: 34, delay: 1.1, duration: 8.2 },
+  { key: 'tech-server', Icon: Server, top: '72%', left: '52%', size: 24, depth: 22, delay: 2, duration: 8.8 },
+  // Pharma
+  { key: 'pharma-pill', Icon: Pill, top: '9%', left: '33%', size: 26, depth: 40, delay: 1, duration: 8 },
+  { key: 'pharma-stetho', Icon: Stethoscope, top: '60%', left: '71%', size: 26, depth: 32, delay: 2.4, duration: 8.4 },
+  { key: 'pharma-flask', Icon: FlaskConical, top: '12%', left: '66%', size: 28, depth: 38, delay: 0.6, duration: 7.8 },
 ];
 
 const differentiators = [
@@ -76,13 +133,7 @@ export default function Frontpage() {
   const [showLoginModal, setshowLoginModal] = useState(false);
   const [showSignupModal, setshowSignupModal] = useState(false);
 
-  const test = ()=> {
-    displayMessage('success', 'Logged in Successfully', 'Logged in Successfully');
-  }
-
-
   useEffect(() => {
-
     // Array of script sources
     const scripts = [
       'js/jquery.min.js',
@@ -239,6 +290,146 @@ export default function Frontpage() {
     };
   }, []);
 
+  // Futuristic pointer glow: a soft light follows the cursor across the hero.
+  useEffect(() => {
+    const hero = document.querySelector('.de-hero');
+    if (!hero) return;
+
+    const prefersReduced = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const onMove = (e) => {
+      const r = hero.getBoundingClientRect();
+      const mx = e.clientX - r.left;
+      const my = e.clientY - r.top;
+      hero.style.setProperty('--de-mx', `${mx}px`);
+      hero.style.setProperty('--de-my', `${my}px`);
+      // normalized -1..1 offset from centre for icon parallax
+      hero.style.setProperty('--de-px', `${(mx / r.width - 0.5) * 2}`);
+      hero.style.setProperty('--de-py', `${(my / r.height - 0.5) * 2}`);
+      hero.classList.add('is-pointer');
+    };
+    const onLeave = () => {
+      hero.classList.remove('is-pointer');
+      hero.style.setProperty('--de-px', '0');
+      hero.style.setProperty('--de-py', '0');
+    };
+
+    hero.addEventListener('mousemove', onMove);
+    hero.addEventListener('mouseleave', onLeave);
+    return () => {
+      hero.removeEventListener('mousemove', onMove);
+      hero.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
+  // Antigravity physics (à la Google Gravity): hero icons are repelled by the
+  // cursor, fly away with momentum, then spring back to home with a bouncy
+  // overshoot. Each icon is a little mass with velocity, friction and a spring.
+  useEffect(() => {
+    const hero = document.querySelector('.de-hero');
+    if (!hero) return;
+
+    const prefersReduced = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const icons = Array.from(hero.querySelectorAll('.de-hero-icon'));
+    if (icons.length === 0) return;
+
+    const RADIUS = 200;      // px of cursor influence
+    const PUSH = 5.2;        // repulsion strength
+    const SPRING = 0.014;    // pull back to home
+    const FRICTION = 0.9;    // velocity damping (momentum)
+    const MAX_OFFSET = 190;  // clamp how far an icon can fly
+
+    const state = icons.map((el) => {
+      const depth = parseFloat(el.style.getPropertyValue('--depth')) || 28;
+      return { el, mass: 40 / depth, cx: 0, cy: 0, x: 0, y: 0, vx: 0, vy: 0, rot: 0 };
+    });
+
+    const measure = () => {
+      const hr = hero.getBoundingClientRect();
+      state.forEach((s) => {
+        const r = s.el.getBoundingClientRect();
+        s.cx = (r.left - hr.left) + r.width / 2 - s.x;
+        s.cy = (r.top - hr.top) + r.height / 2 - s.y;
+      });
+    };
+
+    const mouse = { x: -9999, y: -9999, active: false };
+    let frame = 0;
+
+    const tick = () => {
+      let energy = 0;
+      state.forEach((s) => {
+        // spring back toward home (0,0)
+        s.vx += -s.x * SPRING;
+        s.vy += -s.y * SPRING;
+
+        // repulsion from cursor
+        if (mouse.active) {
+          const dx = (s.cx + s.x) - mouse.x;
+          const dy = (s.cy + s.y) - mouse.y;
+          const dist = Math.hypot(dx, dy) || 1;
+          if (dist < RADIUS) {
+            const force = (1 - dist / RADIUS) * PUSH * s.mass;
+            s.vx += (dx / dist) * force;
+            s.vy += (dy / dist) * force;
+          }
+        }
+
+        // integrate with friction (momentum)
+        s.vx *= FRICTION;
+        s.vy *= FRICTION;
+        s.x += s.vx;
+        s.y += s.vy;
+
+        // clamp distance from home
+        const off = Math.hypot(s.x, s.y);
+        if (off > MAX_OFFSET) {
+          s.x = (s.x / off) * MAX_OFFSET;
+          s.y = (s.y / off) * MAX_OFFSET;
+        }
+
+        // a little spin proportional to horizontal velocity for flair
+        s.rot += (s.vx * 0.6 - s.rot) * 0.1;
+        s.el.style.transform = `translate(${s.x}px, ${s.y}px) rotate(${s.rot}deg)`;
+
+        energy += Math.abs(s.vx) + Math.abs(s.vy) + Math.abs(s.x) + Math.abs(s.y);
+      });
+
+      if (mouse.active || energy > 0.6) {
+        frame = requestAnimationFrame(tick);
+      } else {
+        frame = 0;
+        state.forEach((s) => { s.x = s.y = s.vx = s.vy = s.rot = 0; s.el.style.transform = ''; });
+      }
+    };
+    const start = () => { if (!frame) frame = requestAnimationFrame(tick); };
+
+    const onMove = (e) => {
+      const hr = hero.getBoundingClientRect();
+      mouse.x = e.clientX - hr.left;
+      mouse.y = e.clientY - hr.top;
+      mouse.active = true;
+      start();
+    };
+    const onLeave = () => { mouse.active = false; start(); };
+
+    measure();
+    window.addEventListener('resize', measure);
+    hero.addEventListener('mousemove', onMove);
+    hero.addEventListener('mouseleave', onLeave);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('resize', measure);
+      hero.removeEventListener('mousemove', onMove);
+      hero.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -296,20 +487,57 @@ export default function Frontpage() {
 
       {/* ============ Hero ============ */}
       <section className="de-hero">
+        {/* Ambient futuristic layers: pointer-follow glow + floating particles */}
+        <div className="de-hero-glow" aria-hidden="true" />
+        <div className="de-hero-particles" aria-hidden="true">
+          {heroParticles.map((p, i) => (
+            <span
+              key={i}
+              style={{
+                left: p.left,
+                width: `${p.size}px`,
+                height: `${p.size}px`,
+                opacity: p.opacity,
+                animationDelay: `${p.delay}s`,
+                animationDuration: `${p.duration}s`,
+              }}
+            />
+          ))}
+        </div>
+        {/* Themed product icons that drift + parallax with the cursor */}
+        <div className="de-hero-icons" aria-hidden="true">
+          {heroIcons.map((it) => {
+            const Icon = it.Icon;
+            return (
+              <span
+                key={it.key}
+                className="de-hero-icon"
+                style={{ top: it.top, left: it.left, '--depth': it.depth }}
+              >
+                <span
+                  className="de-hero-icon-in"
+                  style={{ animationDelay: `${it.delay}s`, animationDuration: `${it.duration}s` }}
+                >
+                  <Icon size={it.size} strokeWidth={1.6} />
+                </span>
+              </span>
+            );
+          })}
+        </div>
         <div className="container mycontainer">
           <div className="de-hero-grid">
             <div className="de-hero-copy">
-              <span className="de-eyebrow de-eyebrow-light">Demand Forecasting Platform</span>
-              <h1>
-                Predict the future. <br />
-                <span>Plan with confidence.</span>
+              <span className="de-eyebrow de-eyebrow-light de-hero-anim">Demand Forecasting Platform</span>
+              <h1 className="de-hero-title">
+                <span className="de-hero-line"><span className="de-hero-line-in">Predict the future.</span></span>
+                <span className="de-hero-line"><span className="de-hero-line-in de-hero-accent">Plan with confidence.</span></span>
               </h1>
-              <p>
+              <p className="de-hero-anim">
                 Demand Edge turns your data into precise forecasts and actionable
                 insight — so your team can anticipate market trends and optimise
                 resource allocation in the present.
               </p>
-              <div className="de-hero-cta">
+              <div className="de-hero-cta de-hero-anim">
                 <button className="de-btn de-btn-primary" onClick={() => setshowSignupModal(true)}>
                   Get Started <ArrowRight size={18} strokeWidth={2.5} />
                 </button>
@@ -318,7 +546,7 @@ export default function Frontpage() {
                 </a>
               </div>
 
-              <ul className="de-hero-points">
+              <ul className="de-hero-points de-hero-anim">
                 <li><CheckCircle2 size={16} strokeWidth={2.5} /> Postgres-backed & scalable</li>
                 <li><CheckCircle2 size={16} strokeWidth={2.5} /> Automated workflows</li>
                 <li><CheckCircle2 size={16} strokeWidth={2.5} /> Model-driven accuracy</li>
@@ -328,18 +556,12 @@ export default function Frontpage() {
             <div className="de-hero-visual">
               <div className="de-hero-art">
                 <img className="de-hero-robot" src={images.banner1} alt="Demand Edge AI" />
-                <div className="de-hero-demo" ref={demoCardRef}>
-                  <div className="de-hero-demo-bar">
-                    <i /><i /><i />
-                    <span className="de-demo-url">demandedge.app/forecast</span>
-                  </div>
-                  {/* TODO: replace this placeholder with the demo video / <iframe> / GIF */}
-                  <div className="de-demo-placeholder">
-                    <span className="de-demo-play"><Play size={26} strokeWidth={2.5} fill="currentColor" /></span>
-                    <p>Demo coming soon</p>
-                    <small>This space is reserved — embed your product demo here later.</small>
-                  </div>
-                </div>
+                <button className="de-hero-play" ref={demoCardRef} type="button" aria-label="Play demo">
+                  <span className="de-hero-play-core">
+                    <Play size={22} strokeWidth={2.5} fill="currentColor" />
+                  </span>
+                  <span className="de-hero-play-label">Play Demo</span>
+                </button>
               </div>
             </div>
           </div>
@@ -351,20 +573,12 @@ export default function Frontpage() {
       <div className="de-stats-wrap">
         <div className="container mycontainer">
           <div className="de-stats de-reveal">
-            {heroStats.map((s, i) => {
-              const Icon = s.icon;
-              return (
-                <div className="de-stat" style={{ transitionDelay: `${i * 110}ms` }} key={s.label}>
-                  {Icon && (
-                    <span className="de-stat-icon">
-                      <Icon size={18} strokeWidth={2.2} />
-                    </span>
-                  )}
-                  <strong>{s.value}</strong>
-                  <span className="de-stat-label">{s.label}</span>
-                </div>
-              );
-            })}
+            {heroStats.map((s, i) => (
+              <div className="de-stat" style={{ transitionDelay: `${i * 110}ms` }} key={s.label}>
+                <strong>{s.value}</strong>
+                <span className="de-stat-label">{s.label}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -373,41 +587,54 @@ export default function Frontpage() {
       <span id="aboutus" className="de-anchor" />
       <section className="de-section de-about">
         <div className="container mycontainer">
-          <div className="de-section-head de-reveal">
-            <span className="de-eyebrow">About Us</span>
-            <h2>Precision Forecasting for <span>Strategic Decision-Making</span></h2>
-            <p>
-              Demand Edge is your essential tool for precise forecasting, delivering
-              actionable insights to drive strategic decision-making. With advanced
-              algorithms and data analytics, it empowers businesses to anticipate market
-              trends, optimise resource allocation and sustain competitive advantage.
-            </p>
-          </div>
-
-          <div className="de-about-grid">
-            <article className="de-card de-card-feature de-reveal">
-              <img src={images.icon1} alt="Data Analytics" />
-              <h3>Data Analytics</h3>
+          <div className="de-about-layout">
+            {/* LEFT: narrative */}
+            <div className="de-about-intro de-reveal">
+              <span className="de-eyebrow">About Us</span>
+              <h2>Precision Forecasting for <span>Strategic Decision-Making</span></h2>
               <p>
-                Transform raw historical data into clear, reliable signals. Validate,
-                explore and prepare datasets so every forecast starts from a trusted base.
+                Demand Edge is a an essential tool that turns advanced algorithms and data analytics into actionable
+                insight — so you can anticipate trends and plan with confidence.
               </p>
-              <button className="de-link" onClick={() => setshowSignupModal(true)}>
-                Get Started <ArrowRight size={16} strokeWidth={2.5} />
+              <button className="de-btn de-btn-primary" onClick={() => setshowSignupModal(true)}>
+                Get Started <ArrowRight size={18} strokeWidth={2.5} />
               </button>
-            </article>
+            </div>
 
-            <article className="de-card de-card-feature de-reveal" style={{ transitionDelay: '120ms' }}>
-              <img src={images.icon2} alt="Advanced Algorithms" />
-              <h3>Advanced Algorithms</h3>
-              <p>
-                A rich library of statistical and machine-learning models, automatically
-                tuned and evaluated to deliver the most accurate forecast for your data.
-              </p>
-              <button className="de-link" onClick={() => setshowSignupModal(true)}>
-                Get Started <ArrowRight size={16} strokeWidth={2.5} />
-              </button>
-            </article>
+            {/* RIGHT: horizontal feature cards */}
+            <div className="de-about-cards">
+              <article className="de-card de-about-card de-reveal">
+                <span className="de-about-card-icon">
+                  <img src={images.icon1} alt="Data Analytics" />
+                </span>
+                <div className="de-about-card-body">
+                  <h3>Data Analytics</h3>
+                  <p>
+                    Transform raw historical data into clear, reliable signals. Validate,
+                    explore and prepare datasets so every forecast starts from a trusted base.
+                  </p>
+                  <button className="de-link" onClick={() => setshowSignupModal(true)}>
+                    Get Started <ArrowRight size={16} strokeWidth={2.5} />
+                  </button>
+                </div>
+              </article>
+
+              <article className="de-card de-about-card de-reveal" style={{ transitionDelay: '120ms' }}>
+                <span className="de-about-card-icon">
+                  <img src={images.icon2} alt="Advanced Algorithms" />
+                </span>
+                <div className="de-about-card-body">
+                  <h3>Advanced Algorithms</h3>
+                  <p>
+                    A rich library of statistical and machine-learning models, automatically
+                    tuned and evaluated to deliver the most accurate forecast for your data.
+                  </p>
+                  <button className="de-link" onClick={() => setshowSignupModal(true)}>
+                    Get Started <ArrowRight size={16} strokeWidth={2.5} />
+                  </button>
+                </div>
+              </article>
+            </div>
           </div>
         </div>
       </section>
@@ -475,44 +702,6 @@ export default function Frontpage() {
         </div>
       </section>
 
-      {/* ============ Expertise / Skills ============ */}
-      <section className="de-section de-expertise">
-        <div className="container mycontainer">
-          <div className="de-expertise-grid">
-            <div className="de-expertise-copy de-reveal">
-              <span className="de-eyebrow">Our Skills</span>
-              <h2>We Are Masters In <span>Data Analytics & Algorithms</span></h2>
-              <p>
-                Years of applied data science distilled into a platform that any planning
-                team can use — combining rigorous analysis, advanced modelling and AI.
-              </p>
-
-              <div className="de-progress">
-                <div className="de-progress-item">
-                  <div className="de-progress-label"><span>Data Analysis</span><b>88%</b></div>
-                  <div className="de-progress-track"><i style={{ width: '88%' }} /></div>
-                </div>
-                <div className="de-progress-item">
-                  <div className="de-progress-label"><span>Advanced Algorithms</span><b>55%</b></div>
-                  <div className="de-progress-track"><i style={{ width: '55%' }} /></div>
-                </div>
-                <div className="de-progress-item">
-                  <div className="de-progress-label"><span>AI Solutions</span><b>92%</b></div>
-                  <div className="de-progress-track"><i style={{ width: '92%' }} /></div>
-                </div>
-              </div>
-            </div>
-
-            <div className="de-expertise-highlights">
-              <div className="de-highlight de-reveal"><LineChart size={24} strokeWidth={2} /><div><b>Forecast Reports</b><span>Clear, decision-ready outputs</span></div></div>
-              <div className="de-highlight de-reveal" style={{ transitionDelay: '90ms' }}><Database size={24} strokeWidth={2} /><div><b>Trusted Data Layer</b><span>Datasets, runs & audit logs</span></div></div>
-              <div className="de-highlight de-reveal" style={{ transitionDelay: '180ms' }}><ShieldCheck size={24} strokeWidth={2} /><div><b>Validated Inputs</b><span>Integrity checks on every run</span></div></div>
-              <div className="de-highlight de-reveal" style={{ transitionDelay: '270ms' }}><BrainCircuit size={24} strokeWidth={2} /><div><b>AI-Driven Models</b><span>Auto-tuned for accuracy</span></div></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* ============ Contact ============ */}
       <span id="contactus" className="de-anchor" />
       <section className="de-section de-contact">
@@ -558,7 +747,7 @@ export default function Frontpage() {
       <div className="container-fluid footerbg">
         <div className="container mycontainer">
           <div className="row">
-            <div className="col-md-4 col-sm-6 col-xs-12">
+            <div className="col-md-5 col-sm-6 col-xs-12">
               <img src={images.ftrlogo} className="max ftrlogo" alt="Demand Edge"></img>
               <p>Demand Edge turns your data into precise forecasts and actionable insight, helping teams plan with confidence.</p>
               <div className="ftrsocialmedia">
@@ -569,7 +758,7 @@ export default function Frontpage() {
                 </ul>
               </div>
             </div>
-            <div className="col-md-2 col-sm-6 col-xs-12">
+            <div className="col-md-3 col-sm-6 col-xs-12">
               <h5>Company</h5>
               <div>
                 <ul>
@@ -580,7 +769,7 @@ export default function Frontpage() {
                 </ul>
               </div>
             </div>
-            <div className="col-md-3 col-sm-6 col-xs-12">
+            <div className="col-md-4 col-sm-6 col-xs-12">
               <h5>Contact Us</h5>
               <div>
                 <ul>
@@ -592,15 +781,16 @@ export default function Frontpage() {
                 </ul>
               </div>
             </div>
-            <div className="col-md-3 col-sm-6 col-xs-12">
-              <h5>Get In Touch</h5>
-              <div className="space1">
-                <div className="form-group">
-                  <input type="email" className="form-control" id="customeremail" placeholder="Enter Your Email Adress"></input>
-                </div>
-                <div className="connectbtn"><a href="#" aria-label="DE">Connect With Me <iconify-icon icon="iconamoon:arrow-right-2-bold"></iconify-icon></a></div>
-              </div>
+          </div>
+
+          <div className="footer-bottom">
+            <div className="footer-bottom-left">
+              <img src={images.copyimg} className="footer-copy-logo" alt="Quation" />
+              <span>©2023 Quation Solutions Pvt. Ltd., All rights reserved</span>
             </div>
+            <a href="#" className="footer-top-btn" onClick={scrollToTop} aria-label="Back to top">
+              <iconify-icon icon="tabler:arrow-top-circle"></iconify-icon>
+            </a>
           </div>
         </div>
       </div>
@@ -614,23 +804,6 @@ export default function Frontpage() {
         document.body
       )}
 
-      <div className="container-fluid copybg">
-        <div className="container mycontainer">
-          <div className="row">
-            <div className="col-md-11 col-sm-11 col-xs-12">
-              <img src={images.copyimg} className="max" alt="Demand Edge"></img><br />©2023 Quation Solutions Pvt. Ltd., All rights reserved
-            </div>
-            <div className="col-md-1 col-sm-1 col-xs-12">
-              <p id="bottom">
-                <a href="#" onClick={scrollToTop} aria-label="DE" >
-                  <iconify-icon icon="tabler:arrow-top-circle" className="scrollerbottom animate__animated animate__infinite animate__slideInUp"></iconify-icon>
-                </a>
-              </p>
-            </div>
-          </div>
-        </div>
-
-      </div>
     </Page>
   )
 }
@@ -675,38 +848,25 @@ const Page = styled.div`
 
   .de-hero-copy h1 { font-size: 56px !important; }
   .de-section-head h2 { font-size: 36px !important; }
+  .de-about-intro h2 { font-size: 32px !important; }
   .de-features-intro h2 { font-size: 30px !important; }
-  .de-expertise-copy h2 { font-size: 32px !important; }
   .de-contact-copy h2 { font-size: 36px !important; }
   .de-card-feature h3 { font-size: 22px !important; }
+  .de-about-card-body h3 { font-size: 19px !important; }
   .de-diff-card h3,
   .de-contact-card h3 { font-size: 20px !important; }
   .de-section-head p { font-size: 16.5px !important; }
+  .de-about-intro p { font-size: 16px !important; }
+  .de-about-card-body p { font-size: 14.5px !important; }
   .de-features-intro p { font-size: 16px !important; }
   .de-hero-copy p,
   .de-contact-copy p { font-size: 18px !important; }
   .de-card-feature p { font-size: 15px !important; }
   .de-diff-card p { font-size: 14.5px !important; }
-  .de-expertise-copy p { font-size: 16px !important; }
-  .de-demo-placeholder p { font-size: clamp(13px, 1.5vw, 18px) !important; }
 
   /* ------------------------------------------------------------------
      Animations
      ------------------------------------------------------------------ */
-  @keyframes deFadeUp {
-    from { opacity: 0; transform: translateY(26px); }
-    to { opacity: 1; transform: none; }
-  }
-  @keyframes deFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-12px); }
-  }
-  @keyframes dePulse {
-    0% { box-shadow: 0 14px 30px rgba(172, 20, 36, 0.32), 0 0 0 0 rgba(172, 20, 36, 0.45); }
-    70% { box-shadow: 0 14px 30px rgba(172, 20, 36, 0.32), 0 0 0 18px rgba(172, 20, 36, 0); }
-    100% { box-shadow: 0 14px 30px rgba(172, 20, 36, 0.32), 0 0 0 0 rgba(172, 20, 36, 0); }
-  }
-
   /* Scroll-reveal — toggled by IntersectionObserver (adds .is-visible) */
   .de-reveal {
     opacity: 0;
@@ -716,26 +876,9 @@ const Page = styled.div`
   }
   .de-reveal.is-visible { opacity: 1; transform: none; }
 
-  /* Hero entrance (above the fold → animate on load) */
-  .de-hero-copy > * { animation: deFadeUp 0.7s both; }
-  .de-hero-copy .de-eyebrow { animation-delay: 0.05s; }
-  .de-hero-copy h1 { animation-delay: 0.15s; }
-  .de-hero-copy p { animation-delay: 0.28s; }
-  .de-hero-cta { animation-delay: 0.4s; }
-  .de-hero-points { animation-delay: 0.52s; }
-  .de-hero-visual { animation: deFadeUp 0.8s 0.35s both; }
-  .de-demo-play { animation: dePulse 2.6s ease-out 1.6s infinite; }
-
+  /* Hero entrance is handled per-element via .de-hero-anim / line reveal. */
   @media (prefers-reduced-motion: reduce) {
-    .de-reveal,
-    .de-hero-copy > *,
-    .de-hero-visual,
-    .de-hero-demo,
-    .de-demo-play {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
+    .de-reveal { animation: none !important; opacity: 1 !important; transform: none !important; }
   }
 
   /* ---------- Shared helpers ---------- */
@@ -845,6 +988,88 @@ const Page = styled.div`
     padding: 140px 0 68px;
     overflow: hidden;
   }
+  .de-hero > .container { position: relative; z-index: 2; }
+
+  /* pointer-follow glow — soft, light, smoothly trailing */
+  .de-hero-glow {
+    position: absolute;
+    left: var(--de-mx, 78%);
+    top: var(--de-my, 14%);
+    width: 540px;
+    height: 540px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      rgba(70, 150, 200, 0.18) 0%,
+      rgba(40, 120, 175, 0.1) 38%,
+      rgba(27, 133, 186, 0) 66%
+    );
+    opacity: 0.5;
+    transition: left 0.45s ease-out, top 0.45s ease-out, opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .de-hero.is-pointer .de-hero-glow { opacity: 0.85; }
+
+  /* ambient rising particles — soft & slow for a calm, smooth drift */
+  .de-hero-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .de-hero-particles span {
+    position: absolute;
+    bottom: -14px;
+    border-radius: 50%;
+    background: rgba(150, 195, 225, 0.55);
+    box-shadow: 0 0 9px rgba(120, 180, 220, 0.45);
+    animation-name: deParticleRise;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  @keyframes deParticleRise {
+    0% { transform: translateY(0) scale(0.7); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translateY(-580px) scale(0.4); opacity: 0; }
+  }
+
+  /* themed floating product icons with mouse parallax */
+  .de-hero-icons {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .de-hero-icon {
+    position: absolute;
+    will-change: transform;
+  }
+  .de-hero-icon-in {
+    display: inline-flex;
+    color: rgba(130, 190, 225, 0.4);
+    filter: drop-shadow(0 0 10px rgba(27, 133, 186, 0.35));
+    transition: color 0.5s ease, filter 0.5s ease;
+    animation-name: deIconFloat;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  /* futuristic reveal: icons brighten + glow as the cursor enters the hero */
+  .de-hero.is-pointer .de-hero-icon-in {
+    color: rgba(150, 215, 250, 0.7);
+    filter: drop-shadow(0 0 16px rgba(54, 170, 224, 0.65));
+  }
+  @keyframes deIconFloat {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-18px) rotate(5deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .de-hero-icons { display: none; }
+  }
 
   .de-hero-grid {
     display: grid;
@@ -860,7 +1085,57 @@ const Page = styled.div`
     line-height: 1.1;
     margin: 0 0 18px;
   }
-  .de-hero-copy h1 span { color: var(--de-yellow); }
+  .de-hero-copy h1 .de-hero-accent { color: var(--de-yellow); }
+
+  /* hero title: each line rises out of a mask on load */
+  .de-hero-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+  .de-hero-line-in {
+    display: inline-block;
+    transform: translateY(115%);
+    animation: deLineReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .de-hero-line:nth-child(1) .de-hero-line-in { animation-delay: 0.15s; }
+  .de-hero-line:nth-child(2) .de-hero-line-in { animation-delay: 0.34s; }
+
+  @keyframes deLineReveal {
+    from { transform: translateY(115%); }
+    to { transform: translateY(0); }
+  }
+
+  /* eyebrow / paragraph / cta / points fade-up in sequence on load */
+  .de-hero-anim {
+    animation: deHeroUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .de-hero-copy .de-eyebrow.de-hero-anim { animation-delay: 0.05s; }
+  .de-hero-copy p.de-hero-anim { animation-delay: 0.52s; }
+  .de-hero-cta.de-hero-anim { animation-delay: 0.64s; }
+  .de-hero-points.de-hero-anim { animation-delay: 0.76s; }
+
+  @keyframes deHeroUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* hero visual entrance (opacity only on demo card — JS owns its transform) */
+  .de-hero-robot {
+    animation: deRobotIn 1.1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.3s;
+  }
+  @keyframes deRobotIn {
+    from { opacity: 0; transform: translateX(40px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .de-hero-line-in,
+    .de-hero-anim,
+    .de-hero-robot,
+    .de-hero-play { animation: none !important; transform: none !important; opacity: 1 !important; }
+    .de-hero-particles { display: none; }
+  }
 
   .de-hero-copy p {
     color: #d7e6f0;
@@ -916,51 +1191,117 @@ const Page = styled.div`
     filter: drop-shadow(0 26px 44px rgba(0, 0, 0, 0.5));
     pointer-events: none;
   }
-  .de-hero-demo {
-    position: relative;
+  /* Floating play button — blends into the hero, follows the cursor (JS rAF).
+     The button is just a positioning wrapper (JS owns its transform); the
+     visible circle lives in .de-hero-play-core so hover effects don't clash. */
+  .de-hero-play {
+    position: absolute;
+    left: 30%;
+    top: 42%;
     z-index: 2;
-    width: 59%;
-    margin-bottom: 17%;
-    background: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.7);
-    border-radius: 16px;
     padding: 0;
-    overflow: hidden;
-    box-shadow: 0 34px 74px rgba(4, 22, 33, 0.55);
-    transform-style: preserve-3d;
-    /* follow easing is handled in JS (rAF lerp); only animate shadow here */
-    transition: box-shadow 0.35s ease;
-    will-change: transform;
-  }
-  .de-hero-demo-bar {
-    display: flex;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 11px 14px;
-    background: linear-gradient(135deg, var(--de-navy) 0%, var(--de-navy-deep) 100%);
+    justify-content: center;
+    will-change: transform;
+    animation: deHeroPlayIn 0.8s ease both;
+    animation-delay: 0.6s;
   }
-  .de-hero-demo-bar i {
-    width: 11px;
-    height: 11px;
+  .de-hero-play-core {
+    position: relative;
+    width: 74px;
+    height: 74px;
     border-radius: 50%;
-    background: #e0e6eb;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: linear-gradient(135deg, rgba(200, 50, 74, 0.92) 0%, rgba(172, 20, 36, 0.92) 100%);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 16px 38px rgba(172, 20, 36, 0.42), 0 0 0 6px rgba(255, 255, 255, 0.06);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease;
+    animation: deHeroPlayPulse 3s ease-in-out infinite;
   }
-  .de-hero-demo-bar i:nth-child(1) { background: #ff5f57; }
-  .de-hero-demo-bar i:nth-child(2) { background: #febc2e; }
-  .de-hero-demo-bar i:nth-child(3) { background: #28c840; }
-  .de-demo-url {
-    margin-left: 10px;
-    font-size: 11px !important;
-    font-weight: 500;
-    letter-spacing: 0.3px;
-    color: #cfe1ee;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    border-radius: 7px;
-    padding: 3px 12px;
+  .de-hero-play-core svg { position: relative; z-index: 1; margin-left: 2px; }
+  /* gentle pulsing rings so it reads as "play demo" */
+  .de-hero-play-core::before,
+  .de-hero-play-core::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    animation: deHeroPlayRipple 3s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  .de-hero-play-core::after { animation-delay: 1.5s; }
+  .de-hero-play:hover .de-hero-play-core {
+    transform: scale(1.12);
+    box-shadow: 0 20px 50px rgba(172, 20, 36, 0.62), 0 0 0 10px rgba(255, 255, 255, 0.12);
+  }
+
+  /* "Play Demo" label revealed on hover */
+  .de-hero-play-label {
+    position: absolute;
+    top: calc(100% + 14px);
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
     white-space: nowrap;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: #fff;
+    background: rgba(12, 60, 84, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    padding: 7px 14px;
+    border-radius: 9px;
+    box-shadow: 0 10px 24px rgba(4, 22, 33, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .de-hero-demo:hover .de-demo-play { transform: scale(1.06); }
+  .de-hero-play-label::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    transform: translateX(-50%) rotate(45deg);
+    width: 9px;
+    height: 9px;
+    background: rgba(12, 60, 84, 0.92);
+    border-left: 1px solid rgba(255, 255, 255, 0.18);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+  }
+  .de-hero-play:hover .de-hero-play-label {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  @keyframes deHeroPlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes deHeroPlayPulse {
+    0%, 100% { box-shadow: 0 16px 38px rgba(172, 20, 36, 0.42), 0 0 0 6px rgba(255, 255, 255, 0.06); }
+    50% { box-shadow: 0 16px 48px rgba(172, 20, 36, 0.6), 0 0 0 6px rgba(255, 255, 255, 0.1); }
+  }
+  @keyframes deHeroPlayRipple {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .de-hero-play,
+    .de-hero-play-core,
+    .de-hero-play-core::before,
+    .de-hero-play-core::after { animation: none !important; }
+  }
 
   /* ---------- Stats band — premium floating glass KPI panel ---------- */
   .de-stats-wrap {
@@ -990,7 +1331,7 @@ const Page = styled.div`
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 6px 16px;
+    padding: 4px 16px;
     border-radius: 12px;
     transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
   }
@@ -998,56 +1339,41 @@ const Page = styled.div`
   .de-stat::after {
     content: '';
     position: absolute;
-    top: 16%;
-    bottom: 16%;
+    top: 18%;
+    bottom: 18%;
     right: 0;
     width: 1px;
     background: linear-gradient(180deg, transparent, var(--de-border) 25%, var(--de-border) 75%, transparent);
   }
   .de-stat:last-child::after { display: none; }
 
-  .de-stat-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    margin-bottom: 9px;
-    border-radius: 10px;
-    color: var(--de-blue);
-    background: linear-gradient(135deg, #eaf4fb 0%, #f3f9fd 100%);
-    border: 1px solid var(--de-border);
-    transition: transform 0.3s ease, color 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  }
-
   .de-stat strong {
     display: block;
-    color: var(--de-navy);
-    font-size: 32px;
+    font-size: 30px;
     font-weight: 800;
     line-height: 1;
     letter-spacing: -0.5px;
+    /* theme gradient numbers for a premium feel */
+    background: linear-gradient(135deg, var(--de-navy) 0%, var(--de-blue) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: var(--de-navy);
   }
   .de-stat-label {
     display: block;
-    margin-top: 6px;
+    margin-top: 7px;
     color: var(--de-muted);
     font-size: 13px;
     font-weight: 600;
     letter-spacing: 0.2px;
   }
 
-  /* hover: lift + glow */
+  /* hover: subtle lift + glow */
   .de-stat:hover {
-    transform: translateY(-6px);
+    transform: translateY(-4px);
     background: rgba(255, 255, 255, 0.85);
-    box-shadow: 0 16px 30px rgba(7, 35, 52, 0.12);
-  }
-  .de-stat:hover .de-stat-icon {
-    transform: scale(1.08);
-    color: #fff;
-    background: linear-gradient(135deg, var(--de-navy) 0%, var(--de-blue) 100%);
-    box-shadow: 0 8px 18px rgba(27, 133, 186, 0.32);
+    box-shadow: 0 14px 26px rgba(7, 35, 52, 0.1);
   }
 
   @keyframes deStatsRise {
@@ -1058,58 +1384,99 @@ const Page = styled.div`
     .de-stats { animation: none !important; }
   }
 
-  /* ---------- Demo placeholder (rendered inside the hero) ---------- */
-  .de-demo-placeholder {
-    aspect-ratio: 16 / 9;
-    margin: 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    gap: 4px;
-    border: 1.5px dashed #b6d4e8;
-    border-radius: 12px;
-    background:
-      radial-gradient(420px 220px at 50% 22%, rgba(27, 133, 186, 0.18), transparent 70%),
-      linear-gradient(135deg, #eef6fc 0%, #f3f9fd 55%, #e9f3fb 100%);
-  }
-  .de-demo-play {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: clamp(46px, 4.6vw, 64px);
-    height: clamp(46px, 4.6vw, 64px);
-    border-radius: 50%;
-    background: linear-gradient(135deg, #c8324a 0%, var(--de-red) 60%, #8f0f1d 100%);
-    color: #fff;
-    margin-bottom: clamp(6px, 1vw, 12px);
-    box-shadow: 0 14px 30px rgba(172, 20, 36, 0.4);
-    transition: transform 0.2s ease;
-  }
-  .de-demo-play svg { width: clamp(20px, 2vw, 26px); height: auto; }
-  .de-demo-placeholder p {
-    color: var(--de-navy);
-    font-size: 18px;
-    font-weight: 700;
-    margin: 0;
-  }
-  .de-demo-placeholder small {
-    color: var(--de-muted);
-    font-size: clamp(10px, 1.1vw, 12.5px);
-    line-height: 1.4;
-    padding: 0 clamp(10px, 2vw, 18px);
-  }
+  /* ---------- (placeholder demo card removed — replaced by .de-hero-play) ---------- */
 
   /* ---------- About ---------- */
   .de-about { background: linear-gradient(180deg, #ffffff, #f9fcff); }
 
-  .de-about-grid {
+  .de-about-layout {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 26px;
-    max-width: 1040px;
-    margin: 0 auto;
+    grid-template-columns: 0.92fr 1.08fr;
+    gap: 46px;
+    align-items: center;
+  }
+
+  .de-about-intro { text-align: left; }
+  .de-about-intro h2 {
+    color: var(--de-navy);
+    font-weight: 400;
+    line-height: 1.22;
+    margin: 14px 0 16px;
+  }
+  .de-about-intro h2 span { font-weight: 800; }
+  .de-about-intro p {
+    color: var(--de-muted);
+    line-height: 1.7;
+    margin: 0;
+  }
+  .de-about-intro .de-btn { margin-top: 26px; }
+
+  .de-about-checks {
+    list-style: none;
+    margin: 20px 0 26px;
+    padding: 0;
+  }
+  .de-about-checks li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--de-navy);
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .de-about-checks svg { color: var(--de-blue); flex-shrink: 0; }
+
+  .de-about-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .de-about-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 24px 26px;
+    text-align: left;
+  }
+  .de-about-card-icon {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #eaf4fb 0%, #f3f9fd 100%);
+    border: 1px solid var(--de-border);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .de-about-card-icon img {
+    width: 34px;
+    height: auto;
+    margin: 0;
+    transition: transform 1.4s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  .de-about-card:hover .de-about-card-icon {
+    transform: scale(1.06);
+    box-shadow: 0 10px 22px rgba(27, 133, 186, 0.2);
+  }
+  /* spin the icon a full turn on hover (card or icon) */
+  .de-about-card:hover .de-about-card-icon img,
+  .de-about-card-icon:hover img {
+    transform: rotate(360deg);
+  }
+  .de-about-card-body { min-width: 0; }
+  .de-about-card-body h3 {
+    color: var(--de-navy);
+    font-weight: 700;
+    margin: 2px 0 8px;
+  }
+  .de-about-card-body p {
+    color: var(--de-muted);
+    line-height: 1.6;
+    margin: 0 0 14px;
   }
 
   .de-card {
@@ -1319,71 +1686,6 @@ const Page = styled.div`
     margin: 0;
   }
 
-  /* ---------- Expertise ---------- */
-  .de-expertise { background: #fff; }
-  .de-expertise-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 50px;
-    align-items: center;
-  }
-  .de-expertise-copy h2 {
-    color: var(--de-navy);
-    font-size: 32px;
-    font-weight: 400;
-    line-height: 1.25;
-    margin: 0 0 14px;
-  }
-  .de-expertise-copy h2 span { font-weight: 800; }
-  .de-expertise-copy p {
-    color: var(--de-muted);
-    font-size: 15.5px;
-    line-height: 1.6;
-    margin: 0 0 26px;
-  }
-
-  .de-progress-item { margin-bottom: 20px; }
-  .de-progress-label {
-    display: flex;
-    justify-content: space-between;
-    color: var(--de-navy);
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-  .de-progress-label b { color: var(--de-red); }
-  .de-progress-track {
-    height: 8px;
-    background: var(--de-bg);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  .de-progress-track i {
-    display: block;
-    height: 100%;
-    border-radius: 10px;
-    background: linear-gradient(to right, var(--de-navy), var(--de-blue));
-  }
-
-  .de-expertise-highlights {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-  }
-  .de-highlight {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    background: linear-gradient(180deg, #ffffff, #f6fbff);
-    border: 1px solid var(--de-border);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: var(--de-shadow);
-  }
-  .de-highlight svg { color: var(--de-blue); flex-shrink: 0; }
-  .de-highlight b { display: block; color: var(--de-navy); font-size: 15px; }
-  .de-highlight span { display: block; color: var(--de-muted); font-size: 13px; margin-top: 3px; }
-
   /* ---------- Contact ---------- */
   .de-contact {
     background:
@@ -1477,31 +1779,64 @@ const Page = styled.div`
   /* ---------- Footer (scoped overrides — the global .footerbg renders oversized) ---------- */
   .footerbg {
     margin-top: 0 !important;
-    padding: 34px 0 20px !important;
+    padding: 26px 0 14px !important;
     background: var(--de-bg);
   }
-  .footerbg .ftrlogo { width: 42% !important; margin-bottom: 6px; }
+  .footerbg .ftrlogo { width: 38% !important; margin-bottom: 4px; }
   .footerbg p {
-    font-size: 13.5px !important;
-    line-height: 1.6;
-    width: 94%;
-    margin-bottom: 12px;
+    font-size: 12px !important;
+    line-height: 1.45;
+    width: 86%;
+    margin-bottom: 6px;
   }
   .footerbg h5 {
-    font-size: 15px !important;
+    font-size: 13.5px !important;
     font-weight: 700 !important;
-    margin: 0 0 4px !important;
+    margin: 0 0 2px !important;
   }
-  .footerbg ul { line-height: 2 !important; }
-  .footerbg ul li { font-size: 13.5px !important; }
-  .footerbg .linehe { line-height: 1.55 !important; }
-  .footerbg .ftrsocialmedia { margin-top: 12px !important; }
-  .footerbg .form-control { height: 44px !important; font-size: 13px; }
-  .footerbg .connectbtn { margin-top: 12px; }
-  .footerbg .connectbtn a { padding: 11px 18px; font-size: 14px; }
-  .copybg { padding: 9px 0 !important; font-size: 12px; line-height: 1.4; }
-  .copybg img { width: 96px !important; height: auto !important; margin-bottom: 2px; }
-  .copybg #bottom { margin: 0 !important; }
+  .footerbg ul { line-height: 1.6 !important; }
+  .footerbg ul li { font-size: 12px !important; }
+  .footerbg .linehe { line-height: 1.45 !important; }
+  .footerbg .ftrsocialmedia { margin-top: 8px !important; }
+
+  /* merged copyright row inside the footer card */
+  .footerbg .footer-bottom {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(12, 60, 84, 0.1);
+  }
+  .footerbg .footer-bottom-left {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    text-align: center;
+  }
+  .footerbg .footer-copy-logo { width: 92px; height: auto; }
+  .footerbg .footer-bottom-left span {
+    font-size: 11.5px;
+    color: var(--de-muted);
+    line-height: 1.4;
+  }
+  .footerbg .footer-top-btn {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: inline-flex;
+    align-items: center;
+    color: var(--de-red);
+    font-size: 26px;
+    line-height: 1;
+    transition: transform 0.25s ease;
+  }
+  .footerbg .footer-top-btn:hover { transform: translateY(-50%) scale(1.12); }
 
   /* ============================================================
      Responsive
@@ -1512,12 +1847,11 @@ const Page = styled.div`
     .de-hero-copy h1 { font-size: 46px !important; }
     .de-hero-copy p { margin-left: auto; margin-right: auto; }
     .de-hero-cta, .de-hero-points { justify-content: center; }
-    .de-hero-art { min-height: 0; display: block; }
-    .de-hero-demo {
-      position: static;
-      width: 100%;
-      max-width: 600px;
-      margin: 0 auto;
+    .de-hero-art { min-height: 0; display: block; position: relative; }
+    .de-hero-play {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
     .de-hero-robot {
       position: static;
@@ -1536,15 +1870,15 @@ const Page = styled.div`
       bottom: 18%;
     }
 
-    .de-about-grid,
+    .de-about-layout,
     .de-diff-grid,
-    .de-expertise-grid,
     .de-contact-grid { grid-template-columns: 1fr; }
+    .de-about-layout { gap: 30px; }
+    .de-about-intro { text-align: center; }
+    .de-about-checks { display: inline-block; text-align: left; }
 
     .de-features-grid { grid-template-columns: 1fr; gap: 24px; }
     .de-features-intro { text-align: center; }
-
-    .de-expertise-highlights { grid-template-columns: 1fr 1fr; }
   }
 
   @media (max-width: 575px) {
@@ -1552,17 +1886,14 @@ const Page = styled.div`
     .de-hero-copy h1 { font-size: 36px !important; }
     .de-hero-copy p { font-size: 16px !important; }
     .de-section-head h2 { font-size: 26px !important; }
-    .de-expertise-copy h2,
     .de-contact-copy h2 { font-size: 26px !important; }
     /* Mobile: 2 columns if space allows, no vertical dividers */
     .de-stats { grid-template-columns: repeat(2, 1fr); gap: 14px 0; padding: 22px 12px; }
     .de-stat { padding: 8px 10px; }
     .de-stat::after,
     .de-stat:nth-child(odd)::after { display: none; }
-    .de-stat strong { font-size: 32px; }
-    .de-stat-icon { width: 38px; height: 38px; margin-bottom: 9px; }
+    .de-stat strong { font-size: 28px; }
     .de-form-row { grid-template-columns: 1fr; }
-    .de-expertise-highlights { grid-template-columns: 1fr; }
     .de-contact-card { padding: 24px; }
   }
 `;

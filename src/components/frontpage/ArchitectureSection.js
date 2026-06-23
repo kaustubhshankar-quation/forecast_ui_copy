@@ -23,7 +23,7 @@ import {
    ============================================================ */
 
 const heading = {
-  eyebrow: 'Product Architecture',
+  eyebrow: 'Platform Overview',
   title: 'How Demand Edge Works',
   subtitle: 'From inputs to outcomes — one connected demand planning flow.',
 };
@@ -107,6 +107,18 @@ const stages = [
   },
 ];
 
+// Light ambient dots drifting behind the architecture section.
+const archParticles = [
+  { left: '7%', size: 6, delay: 0, duration: 17, opacity: 0.4 },
+  { left: '19%', size: 4, delay: 4, duration: 20, opacity: 0.3 },
+  { left: '32%', size: 7, delay: 2, duration: 16, opacity: 0.38 },
+  { left: '46%', size: 5, delay: 6, duration: 19, opacity: 0.32 },
+  { left: '58%', size: 6, delay: 1.5, duration: 18, opacity: 0.4 },
+  { left: '71%', size: 4, delay: 5, duration: 21, opacity: 0.3 },
+  { left: '83%', size: 7, delay: 3, duration: 16, opacity: 0.36 },
+  { left: '93%', size: 5, delay: 6.5, duration: 20, opacity: 0.32 },
+];
+
 /* ============================================================
    Icon helpers
    ============================================================ */
@@ -141,9 +153,9 @@ function ThemedIcon({ name, theme = 'navy', size = 18 }) {
    Detail cards
    ============================================================ */
 
-function InputNode({ item }) {
+function InputNode({ item, order = 0 }) {
   return (
-    <div className="arch-node">
+    <div className="arch-node arch-rise" style={{ '--i': order }}>
       <ThemedIcon name={item.icon} theme="navy" size={18} />
       <div className="arch-node-text">
         <h5>{item.title}</h5>
@@ -153,19 +165,23 @@ function InputNode({ item }) {
   );
 }
 
-function OutputNode({ item }) {
+function OutputNode({ item, order = 0 }) {
   return (
-    <div className={`arch-out arch-out-${item.theme}`}>
+    <div className={`arch-out arch-out-${item.theme} arch-rise`} style={{ '--i': order }}>
       <ThemedIcon name={item.icon} theme={item.theme} size={20} />
       <h6>{item.title}</h6>
     </div>
   );
 }
 
-function PlatformCard({ card, feature = false }) {
+function PlatformCard({ card, feature = false, order = 0 }) {
+  // internal stagger so tags build first, then the pipeline steps
+  const tagBase = order + 1;
+  const pipeBase = tagBase + card.tags.length;
   return (
     <div
-      className={`arch-platform-card arch-accent-${card.theme}${feature ? ' arch-platform-card--feature' : ''}`}
+      className={`arch-platform-card arch-accent-${card.theme} arch-rise${feature ? ' arch-platform-card--feature' : ''}`}
+      style={{ '--i': order }}
     >
       <div className="arch-platform-head">
         <ThemedIcon name={card.icon} theme={card.theme} size={19} />
@@ -176,8 +192,12 @@ function PlatformCard({ card, feature = false }) {
       </div>
 
       <div className="arch-tags">
-        {card.tags.map((tag) => (
-          <span className={`arch-tag arch-tag-${card.theme}`} key={tag}>
+        {card.tags.map((tag, i) => (
+          <span
+            className={`arch-tag arch-tag-${card.theme}${feature ? ' arch-rise-in' : ''}`}
+            style={feature ? { '--i': tagBase + i } : undefined}
+            key={tag}
+          >
             {tag}
           </span>
         ))}
@@ -187,7 +207,9 @@ function PlatformCard({ card, feature = false }) {
         <div className="arch-pipeline">
           {card.pipeline.map((step, i) => (
             <React.Fragment key={step}>
-              <span className="arch-pipeline-step">{step}</span>
+              <span className="arch-pipeline-step arch-rise-in" style={{ '--i': pipeBase + i }}>
+                {step}
+              </span>
               {i < card.pipeline.length - 1 && (
                 <ChevronRight className="arch-pipeline-arrow" size={13} strokeWidth={2.5} />
               )}
@@ -214,8 +236,8 @@ function StageDetail({ stageId }) {
   if (stageId === 'inputs') {
     return (
       <div className="arch-detail-grid arch-detail-grid--two">
-        {inputs.map((item) => (
-          <InputNode key={item.id} item={item} />
+        {inputs.map((item, i) => (
+          <InputNode key={item.id} item={item} order={i} />
         ))}
       </div>
     );
@@ -224,8 +246,8 @@ function StageDetail({ stageId }) {
   if (stageId === 'outputs') {
     return (
       <div className="arch-detail-grid arch-detail-grid--three">
-        {outputs.map((item) => (
-          <OutputNode key={item.id} item={item} />
+        {outputs.map((item, i) => (
+          <OutputNode key={item.id} item={item} order={i} />
         ))}
       </div>
     );
@@ -233,15 +255,19 @@ function StageDetail({ stageId }) {
 
   const featureCards = platform.filter((c) => c.pipeline);
   const standardCards = platform.filter((c) => !c.pipeline);
+  // sub cards continue the stagger after the feature card has built its
+  // internal tags + pipeline steps, so the whole diagram assembles in order.
+  const feature = featureCards[0];
+  const subBase = 1 + (feature ? feature.tags.length + feature.pipeline.length : 0);
 
   return (
     <div className="arch-platform-body">
       {featureCards.map((card) => (
-        <PlatformCard key={card.id} card={card} feature />
+        <PlatformCard key={card.id} card={card} feature order={0} />
       ))}
       <div className="arch-platform-sub">
-        {standardCards.map((card) => (
-          <PlatformCard key={card.id} card={card} />
+        {standardCards.map((card, i) => (
+          <PlatformCard key={card.id} card={card} order={subBase + i} />
         ))}
       </div>
     </div>
@@ -259,6 +285,21 @@ export default function ArchitectureSection() {
 
   return (
     <Wrapper className="container-fluid">
+      <div className="arch-particles" aria-hidden="true">
+        {archParticles.map((p, i) => (
+          <span
+            key={i}
+            style={{
+              left: p.left,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              opacity: p.opacity,
+              animationDelay: `${p.delay}s`,
+              animationDuration: `${p.duration}s`,
+            }}
+          />
+        ))}
+      </div>
       <div className="container mycontainer">
         <div className="arch-header de-reveal">
           <span className="arch-eyebrow">{heading.eyebrow}</span>
@@ -338,6 +379,7 @@ const Wrapper = styled.div`
   --arch-shadow: 0 4px 18px rgba(12, 60, 84, 0.07);
   --arch-shadow-hover: 0 14px 34px rgba(12, 60, 84, 0.14);
 
+  position: relative;
   background: radial-gradient(
       1200px 480px at 50% -12%,
       #eaf3fb 0%,
@@ -346,6 +388,33 @@ const Wrapper = styled.div`
     linear-gradient(180deg, #ffffff 0%, #f5fafe 100%);
   padding: 48px 0 56px;
   overflow: hidden;
+
+  & > .container { position: relative; z-index: 1; }
+
+  /* ---------- Ambient floating dots ---------- */
+  .arch-particles {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .arch-particles span {
+    position: absolute;
+    bottom: -12px;
+    border-radius: 50%;
+    background: rgba(27, 133, 186, 0.32);
+    box-shadow: 0 0 8px rgba(27, 133, 186, 0.28);
+    animation-name: archFloatUp;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  @keyframes archFloatUp {
+    0% { transform: translateY(0) scale(0.7); opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { transform: translateY(-440px) scale(0.4); opacity: 0; }
+  }
 
   /* ---------- Header ---------- */
   .arch-header {
@@ -388,7 +457,7 @@ const Wrapper = styled.div`
     display: grid;
     grid-template-columns: 0.82fr 1.18fr;
     gap: 26px;
-    align-items: start;
+    align-items: stretch;
     max-width: 1140px;
     margin: 0 auto;
   }
@@ -403,6 +472,7 @@ const Wrapper = styled.div`
   .arch-stage {
     position: relative;
     display: flex;
+    flex: 1;
     align-items: center;
     gap: 14px;
     text-align: left;
@@ -413,6 +483,7 @@ const Wrapper = styled.div`
     padding: 18px 18px;
     cursor: pointer;
     outline: none;
+    overflow: hidden;
     box-shadow: var(--arch-shadow);
     transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease, background 0.25s ease;
   }
@@ -432,6 +503,26 @@ const Wrapper = styled.div`
   .arch-stage:hover {
     transform: translateY(-2px);
     box-shadow: var(--arch-shadow-hover);
+  }
+  .arch-stage:focus-visible {
+    outline: 2px solid var(--arch-blue);
+    outline-offset: 2px;
+  }
+  /* active card: soft glow + a slow moving sheen */
+  .arch-stage.is-active { box-shadow: var(--arch-shadow-hover); }
+  .arch-stage.is-active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    pointer-events: none;
+    background: linear-gradient(120deg, transparent 35%, rgba(255, 255, 255, 0.5) 50%, transparent 65%);
+    background-size: 220% 100%;
+    animation: archStageSheen 4.5s ease-in-out infinite;
+  }
+  @keyframes archStageSheen {
+    0% { background-position: 220% 0; }
+    100% { background-position: -120% 0; }
   }
 
   .arch-stage-no {
@@ -491,12 +582,62 @@ const Wrapper = styled.div`
 
   /* ---------- Right: detail panel ---------- */
   .arch-detail {
+    position: relative;
+    display: flex;
+    flex-direction: column;
     background: #ffffff;
     border: 1px solid #e8eff5;
-    border-radius: 20px;
-    padding: 24px 24px 26px;
+    border-radius: 18px;
+    padding: 20px 20px 20px;
     box-shadow: 0 14px 38px rgba(12, 60, 84, 0.1);
-    animation: archFade 0.4s ease both;
+    overflow: hidden;
+    transform-origin: center top;
+    animation: archFade 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  /* blueprint dot-grid that prints in behind the cards as it builds */
+  .arch-detail::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image: radial-gradient(rgba(27, 133, 186, 0.12) 1px, transparent 1px);
+    background-size: 18px 18px;
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 60%, transparent 100%);
+    opacity: 0;
+    animation: archGridIn 1.35s ease 0.08s both;
+  }
+  @keyframes archGridIn {
+    from { opacity: 0; transform: scale(1.04); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  /* keep real content above the blueprint grid */
+  .arch-detail > * { position: relative; z-index: 1; }
+  /* a glowing blue "render scan" sweeps across the panel as it builds */
+  .arch-detail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 42%;
+    height: 100%;
+    z-index: 2;
+    background: linear-gradient(
+      105deg,
+      transparent,
+      rgba(27, 133, 186, 0.16),
+      rgba(255, 255, 255, 0.55),
+      transparent
+    );
+    transform: skewX(-16deg);
+    pointer-events: none;
+    animation: archShine 2.2s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+  }
+  @keyframes archShine {
+    0% { left: -45%; opacity: 0; }
+    25% { opacity: 1; }
+    100% { left: 125%; opacity: 0; }
   }
 
   .arch-detail-blue { border-top: 3px solid var(--arch-blue); }
@@ -507,8 +648,8 @@ const Wrapper = styled.div`
     display: flex;
     align-items: center;
     gap: 14px;
-    padding-bottom: 18px;
-    margin-bottom: 18px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
     border-bottom: 1px solid #eef4f8;
   }
 
@@ -519,7 +660,7 @@ const Wrapper = styled.div`
 
   .arch-detail-titles h3 {
     color: var(--arch-navy);
-    font-size: 19px !important;
+    font-size: 17px !important;
     font-weight: 800;
     line-height: 1.2;
     margin: 0;
@@ -528,7 +669,7 @@ const Wrapper = styled.div`
   .arch-detail-titles span {
     display: block;
     color: var(--arch-muted);
-    font-size: 13px;
+    font-size: 12px;
     line-height: 1.3;
     margin-top: 2px;
   }
@@ -547,14 +688,59 @@ const Wrapper = styled.div`
   }
 
   @keyframes archFade {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(16px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ---------- Build-in stagger (re-runs on stage change via key) ----------
+     Uses fill-mode: backwards so the from-state shows during the stagger
+     delay, but the element reverts to its normal styles afterwards — that
+     keeps hover transforms/shadows fully working once the build finishes. */
+  .arch-detail-head > * {
+    animation: archRiseSoft 0.75s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+  .arch-detail-head > *:nth-child(1) { animation-delay: 0.1s; }
+  .arch-detail-head > *:nth-child(2) { animation-delay: 0.22s; }
+  .arch-detail-head > *:nth-child(3) { animation-delay: 0.34s; }
+
+  .arch-rise {
+    animation: archMaterialize 0.9s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(0.42s + var(--i, 0) * 0.14s);
+  }
+  .arch-rise-in {
+    animation: archMaterialize 0.78s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(0.52s + var(--i, 0) * 0.11s);
+  }
+  @keyframes archRiseSoft {
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+  /* "render in": blocks fade up out of blur with a brief blueprint glow */
+  @keyframes archMaterialize {
+    0% {
+      opacity: 0;
+      transform: translateY(14px) scale(0.92);
+      filter: blur(6px);
+    }
+    55% {
+      opacity: 1;
+      filter: blur(0);
+      box-shadow: 0 0 0 2px rgba(27, 133, 186, 0.5), 0 0 18px rgba(27, 133, 186, 0.28);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+      box-shadow: 0 0 0 0 rgba(27, 133, 186, 0);
+    }
   }
 
   /* ---------- Detail grids ---------- */
   .arch-detail-grid {
     display: grid;
     gap: 14px;
+    flex: 1;
+    align-content: stretch;
   }
   .arch-detail-grid--two { grid-template-columns: repeat(2, 1fr); }
   .arch-detail-grid--three { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
@@ -564,10 +750,18 @@ const Wrapper = styled.div`
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    border-radius: 12px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 11px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  /* icon glow on card hover */
+  .arch-node:hover .arch-icon,
+  .arch-out:hover .arch-icon,
+  .arch-platform-card:hover .arch-icon {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 4px rgba(27, 133, 186, 0.1);
   }
 
   .arch-icon-navy { background: rgba(12, 60, 84, 0.08); color: var(--arch-navy); }
@@ -593,12 +787,13 @@ const Wrapper = styled.div`
   .arch-node:hover {
     transform: translateY(-3px);
     background: #fff;
+    border-color: var(--arch-blue-border);
     box-shadow: var(--arch-shadow-hover);
   }
 
   .arch-node-text h5 {
     color: var(--arch-navy);
-    font-size: 14.5px;
+    font-size: 13.5px;
     font-weight: 700;
     line-height: 1.25;
     margin: 0;
@@ -607,7 +802,7 @@ const Wrapper = styled.div`
   .arch-node-text span {
     display: block;
     color: var(--arch-muted);
-    font-size: 12.5px;
+    font-size: 11.5px;
     line-height: 1.3;
     margin-top: 2px;
   }
@@ -616,13 +811,16 @@ const Wrapper = styled.div`
   .arch-platform-body {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 12px;
+    flex: 1;
   }
 
   .arch-platform-sub {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    flex: 1;
+    align-items: stretch;
   }
 
   .arch-platform-card {
@@ -630,8 +828,8 @@ const Wrapper = styled.div`
     text-align: left;
     background: #ffffff;
     border: 1px solid #e8eff5;
-    border-radius: 16px;
-    padding: 18px 20px;
+    border-radius: 14px;
+    padding: 15px 16px;
     box-shadow: var(--arch-shadow);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
     overflow: hidden;
@@ -653,6 +851,7 @@ const Wrapper = styled.div`
 
   .arch-platform-card:hover {
     transform: translateY(-4px);
+    border-color: var(--arch-blue-border);
     box-shadow: var(--arch-shadow-hover);
   }
 
@@ -666,13 +865,13 @@ const Wrapper = styled.div`
   .arch-platform-head {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 14px;
+    gap: 11px;
+    margin-bottom: 12px;
   }
 
   .arch-platform-titles h4 {
     color: var(--arch-navy);
-    font-size: 16.5px;
+    font-size: 14.5px;
     font-weight: 700;
     line-height: 1.2;
     margin: 0;
@@ -681,7 +880,7 @@ const Wrapper = styled.div`
   .arch-platform-titles span {
     display: block;
     color: var(--arch-muted);
-    font-size: 12.5px;
+    font-size: 11.5px;
     line-height: 1.3;
     margin-top: 2px;
   }
@@ -694,10 +893,10 @@ const Wrapper = styled.div`
   }
 
   .arch-tag {
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     line-height: 1.2;
-    padding: 5px 12px;
+    padding: 4px 10px;
     border-radius: 999px;
     border: 1px solid;
     background: #fff;
@@ -781,10 +980,11 @@ const Wrapper = styled.div`
     background: #fff;
     box-shadow: var(--arch-shadow-hover);
   }
+  .arch-out:hover .arch-icon { transform: scale(1.12); }
 
   .arch-out h6 {
     color: var(--arch-navy);
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     line-height: 1.3;
     margin: 0;
@@ -805,7 +1005,19 @@ const Wrapper = styled.div`
 
   @media (prefers-reduced-motion: reduce) {
     .arch-pipeline-arrow,
-    .arch-detail { animation: none !important; }
+    .arch-detail,
+    .arch-detail::before,
+    .arch-detail::after,
+    .arch-detail-head > *,
+    .arch-rise,
+    .arch-rise-in,
+    .arch-stage.is-active::after,
+    .arch-particles span { animation: none !important; }
+    .arch-detail::before { opacity: 1 !important; transform: none !important; }
+    .arch-detail-head > *,
+    .arch-rise,
+    .arch-rise-in { opacity: 1 !important; transform: none !important; filter: none !important; }
+    .arch-particles { display: none; }
   }
 
   /* ============================================================

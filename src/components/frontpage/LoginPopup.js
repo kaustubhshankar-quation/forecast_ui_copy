@@ -4,24 +4,18 @@ import * as images from '../../assets/images';
 import AuthService from '../../services/AuthService';
 import { displayMessage } from '../../Utils/helper';
 import styled from 'styled-components';
-import loginbg from '../../assets/images/loginbg.webp';
 
-//../images/loginbg.webp
 export default function LoginPopup({ onClose, gotoSignUp }) {
 
   const usernameRef = useRef();
   const passwordRef = createRef();
   const agreementRef = useRef();
 
-
-
   const submitLogin = async () => {
     try {
-      //console.log(`${agreementRef.current.checked} value`)
       if (agreementRef.current.checked) {
         let result = await AuthService.login({ username: usernameRef.current.value, password: passwordRef.current.value });
         console.log(result);
-        //displayMessage('success', 'Logged in Successfully', 'Logged in Successfully');
       }
       else {
         displayMessage('danger', 'Please accept Agreement', 'Terms and Conditions');
@@ -34,144 +28,381 @@ export default function LoginPopup({ onClose, gotoSignUp }) {
   }
 
   return (
-    <>
-      <Wrapper>
-        {/* Overlay for faded background */}
-        <div className="modal-overlay" onClick={onClose}></div>
-        <div id="login" className="modal modal-login fade in" style={{ display: 'block' }} >
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-body">
-                <div className="motit">
-                  <button type="button" onClick={onClose} className="close"><iconify-icon icon="material-symbols:close"></iconify-icon></button>
-                </div>
-                <div className="col-md-12 col-sm-12 col-xs-12">
-                  <div className="loginwhitebg">
-                    <div className="col-md-12 col-sm-12 col-xs-12">
-                      <div className="loginiconbg">
-                        <img src={images.loginicon1} className="max" alt="Demand Edge" />
+    <Wrapper>
+      <div className="dem-overlay" onClick={onClose}></div>
 
-                        <span>Login</span>
-                      </div>
-                    </div>
-                    <div className="col-md-12 col-sm-12 col-xs-12">
-                      <div className="form-group1">
-                        <input ref={usernameRef} type="text" className="form-control form-control1" id="username" placeholder="User Name" />
-                      </div>
-                      <div className="form-group1">
-                        <input ref={passwordRef} type="password" className="form-control form-control1" id="password" placeholder="Password" />
-                      </div>
-                      <div className="forgotpwd">
-                        <a href="#" aria-label="DE">Forgot Password?</a>
-                      </div>
-                      <div className="form-group">
-                        <div className="checkbox">
-                          <label><input ref={agreementRef} type="checkbox" id="agreement" />I agree to the Terms of Service and Privacy Policy.</label>
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <div className="connectbtn">
-                          <a onClick={submitLogin} href='#' aria-label="DE">Login <iconify-icon icon="iconamoon:arrow-right-2-bold"></iconify-icon></a></div>
+      <div className="dem-modal" role="dialog" aria-modal="true" aria-label="Login">
+        <button type="button" className="dem-close" onClick={onClose} aria-label="Close">
+          <iconify-icon icon="material-symbols:close"></iconify-icon>
+        </button>
 
-
-                      </div>
-                      <div className="noaccount">
-                        <a href="#" aria-label="DE">Don’t Have An Account?</a>
-                      </div>
-                      <div className="createaccount">
-                        <a onClick={gotoSignUp} className='open-signup' aria-label="DE">Create Account Now</a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div className="dem-head">
+          <span className="dem-head-aurora" aria-hidden="true"></span>
+          <span className="dem-head-dots" aria-hidden="true">
+            <i></i><i></i><i></i><i></i><i></i><i></i>
+          </span>
+          <span className="dem-badge">
+            <img src={images.loginicon1} alt="Demand Edge" />
+          </span>
+          <h3>Welcome back</h3>
+          <p>Log in to your Demand Edge workspace.</p>
         </div>
-      </Wrapper>
-    </>
 
+        <div className="dem-body">
+          <div className="dem-field">
+            <input ref={usernameRef} type="text" id="username" placeholder="User Name" />
+          </div>
+          <div className="dem-field">
+            <input ref={passwordRef} type="password" id="password" placeholder="Password" />
+          </div>
+
+          <div className="dem-forgot">
+            <a href="#" aria-label="Forgot password">Forgot Password?</a>
+          </div>
+
+          <label className="dem-check">
+            <input ref={agreementRef} type="checkbox" id="agreement" />
+            <span>I agree to the Terms of Service and Privacy Policy.</span>
+          </label>
+
+          <button type="button" className="dem-submit" onClick={submitLogin}>
+            Login <iconify-icon icon="iconamoon:arrow-right-2-bold"></iconify-icon>
+          </button>
+
+          <p className="dem-alt">
+            Don’t have an account?
+            <button type="button" className="open-signup" onClick={gotoSignUp}>Create account now</button>
+          </p>
+        </div>
+      </div>
+    </Wrapper>
   )
 }
 
 
 const Wrapper = styled.div`
-.loginwhitebg{background-color: rgba(255, 255, 255, 0.9); text-align: center; margin-top: 7%; width: 96%; margin-left: 33%; float: left; padding-left: 30px; padding-right: 30px; padding-bottom: 30px;}
-.loginwhitebg1{padding: 0px 0px 30px 0px !important;}
-.loginiconbg{
-  background-color: #AC1424; margin-top: -10%;
-  border-radius: 100px;
-  width: 120px;
-  height: 120px;
-  margin: -13% auto 0px auto;
-  text-align: center;
-  padding: 1px 0px 0px 0px; color: #fff;
-  font-size: 17px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.loginiconbg img{width: 68%;}
-.loginiconbg span{margin-bottom:10px;}
-.form-control1{ border: 1px solid #0C3C54 !important; height: 60px !important;}
-.form-control1::placeholder{color: #444444 !important; font-weight: 400 !important;}
-.forgotpwd{text-align: right; font-size: 13px; color: #AC1424; margin-top: -5px; font-weight: 600;}
-.forgotpwd a{color: #AC1424;}
-.loginwhitebg .checkbox label{color: #0C3C54;}
-.noaccount{text-align: center; font-size: 14px; color: #AC1424; margin-top: 35px; font-weight: 400;}
-.noaccount a{color: #AC1424;}
-.createaccount{text-align: center; font-size: 22px; color: #0C3C54; margin-top: 10px; font-weight: 400;}
-.createaccount a{color: #0C3C54;}
+  --de-navy: #0c3c54;
+  --de-navy-deep: #0a324a;
+  --de-blue: #1b85ba;
+  --de-red: #ac1424;
+  --de-muted: #6a7d8c;
 
-.modal {font-family: "Exo"; display: none; overflow: hidden; position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1050; -webkit-overflow-scrolling: touch; outline: 0;}
-.modal-backdrop { position: fixed; top: 0; right: 0; bottom: 0; left: 0; z-index: 1040; background-color: #000; pointer-events: none;}
-.modal-backdrop.fade { opacity: 0; filter: alpha(opacity=0);}
-.fade {opacity: 0; -webkit-transition: opacity 0.15s linear; -o-transition: opacity 0.15s linear; transition: opacity 0.15s linear;}
-.fade.in { opacity: 1;}
-.modal-backdrop.in {opacity: 0.5; filter: alpha(opacity=50);}
-.modal-open {overflow: hidden;}
-.modal-open .modal { overflow-x: hidden; overflow-y: auto; background-color:rgba(0,0,0,0.8) !important; z-index: 99999;}
-.modal-dialog { position: relative; width: auto;}
-.modal.fade .modal-dialog {-webkit-transform: translate(0, -25%); -ms-transform: translate(0, -25%); -o-transform: translate(0, -25%); transform: translate(0, -25%); -webkit-transition: -webkit-transform 0.3s ease-out; -moz-transition: -moz-transform 0.3s ease-out; -o-transition: -o-transform 0.3s ease-out; transition: transform 0.3s ease-out;}
-.modal .modal-dialog, .in .modal-dialog { -webkit-transform: translate(0, 0); -ms-transform: translate(0, 0); -o-transform: translate(0, 0); transform: translate(0, 0); transition-delay: 0.2s; width:38%; margin-top:8%;}
-.modal-content { position: relative;}
-.modal-body p {line-height: 28px;}
-.modal-header { padding: 5px; height:83px !important;}
-.modal-header:before, .modal-header:after, .modal-footer:before, .modal-footer:after { content: " "; display: table;}
-.modal-header:after, .modal-footer:after { clear: both;}
-.close {float: right; font-size: 21px; font-weight: bold; line-height: 1; color: #000; text-shadow: 0 1px 0 #fff; opacity: 0.2; filter: alpha(opacity=20);}
-button.close {padding: 0; cursor: pointer; background: transparent; border: 0; appearance: none; -webkit-appearance: none; font-family: inherit;}
-.close:hover, .close:focus { color: #fff !important; text-decoration: none;  cursor: pointer; opacity: 0.5; filter: alpha(opacity=100);}
-.modal-body .close {top: -25px; right: -30px; font-size: 33px; position: absolute; z-index: 99; color: #fff; opacity: 1;}
-.modal-title { margin: 0; line-height: 1.42857143; color: inherit; font-size: 18px; font-weight: normal;}
-.modal-body { position: relative; width:100%; float:left; text-align: center; background-image: url(${loginbg}); background-repeat: no-repeat;  height: 550px; border-radius: 30px 0px 30px 0px;}
-#driver-terms-modal .modal-body {height: 600px; overflow: scroll;}
-.modal-footer {padding: 15px; text-align: right; border-top: 1px solid #e5e5e5;}
-.modal .btn { font-family: inherit; display: inline-block; margin-bottom: 0; font-weight: normal; text-align: center; vertical-align: middle; touch-action: manipulation; cursor: pointer; background-image: none; border: 1px solid transparent; white-space: nowrap; padding: 6px 12px; font-size: 14px; line-height: 1.42857143;  border-radius: 4px; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none;}
-.modal .btn-default {color: #fff; background-color: #1f8234;}
-.modal .btn-default:hover {color: #333; background-color: #e6e6e6; border-color: #adadad; text-decoration: none;}
-.modal .btn-default:focus {color: #333; background-color: #e6e6e6; border-color: #8c8c8c;}
-.modal .btn:active, .modal .btn.active { outline: 0; background-image: none; -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125); box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);}
-.modal .btn:focus, .modal .btn:active:focus, .modal .btn.active:focus, .modal .btn.focus, .modal .btn:active.focus, .modal .btn.active.focus { outline: 5px auto -webkit-focus-ring-color; outline-offset: -2px;}
-.modal .btn-default:active, .modal .btn-default.active, .modal .open > .dropdown-toggle.btn-default {color: #333; background-color: #e6e6e6; border-color: #adadad;}
-.modal .btn-default:active, .modal .btn-default.active, .modal .open > .dropdown-toggle.btn-default {background-image: none;}
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5); /* 50% opacity for the fade effect */
-  z-index: 99; /* Ensure the overlay appears behind the modal */
-}
-@media (min-width: 768px) {
-    .modal-dialog {
-      width: 600px;
-      margin: 30px auto;
+  .dem-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(7, 25, 38, 0.55);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    z-index: 99998;
+    animation: demFade 0.25s ease both;
+  }
+
+  .dem-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(92vw, 440px);
+    max-height: 92vh;
+    overflow: auto;
+    background: #ffffff;
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(7, 35, 52, 0.45);
+    z-index: 99999;
+    font-family: "Exo", sans-serif;
+    animation: demPop 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .dem-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 3;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .dem-close:hover { background: rgba(255, 255, 255, 0.3); transform: rotate(90deg); }
+
+  /* ---------- Header ---------- */
+  .dem-head {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 30px 28px 24px;
+    background:
+      radial-gradient(420px 160px at 50% -10%, rgba(27, 133, 186, 0.4), transparent 70%),
+      linear-gradient(135deg, var(--de-navy) 0%, var(--de-navy-deep) 100%);
+    border-radius: 22px 22px 0 0;
+  }
+  .dem-head > * { position: relative; z-index: 1; }
+
+  /* slow drifting aurora behind the header content */
+  .dem-head-aurora {
+    position: absolute;
+    inset: -40% -20%;
+    z-index: 0 !important;
+    pointer-events: none;
+    background:
+      radial-gradient(120px 120px at 25% 30%, rgba(27, 133, 186, 0.55), transparent 60%),
+      radial-gradient(140px 140px at 80% 20%, rgba(172, 20, 36, 0.4), transparent 60%),
+      radial-gradient(160px 160px at 60% 90%, rgba(27, 133, 186, 0.35), transparent 65%);
+    filter: blur(6px);
+    opacity: 0.85;
+    animation: demAurora 9s ease-in-out infinite alternate;
+  }
+  @keyframes demAurora {
+    0% { transform: translate3d(-6%, -4%, 0) scale(1); }
+    50% { transform: translate3d(5%, 3%, 0) scale(1.12); }
+    100% { transform: translate3d(-3%, 5%, 0) scale(1.05); }
+  }
+
+  /* floating particles rising through the header */
+  .dem-head-dots {
+    position: absolute;
+    inset: 0;
+    z-index: 0 !important;
+    pointer-events: none;
+  }
+  .dem-head-dots i {
+    position: absolute;
+    bottom: -6px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    animation: demRise 6s linear infinite;
+  }
+  .dem-head-dots i:nth-child(1) { left: 12%; width: 4px; height: 4px; animation-delay: 0s; }
+  .dem-head-dots i:nth-child(2) { left: 30%; animation-delay: 1.4s; }
+  .dem-head-dots i:nth-child(3) { left: 48%; width: 3px; height: 3px; animation-delay: 2.6s; }
+  .dem-head-dots i:nth-child(4) { left: 66%; animation-delay: 0.8s; }
+  .dem-head-dots i:nth-child(5) { left: 82%; width: 4px; height: 4px; animation-delay: 3.4s; }
+  .dem-head-dots i:nth-child(6) { left: 92%; width: 3px; height: 3px; animation-delay: 2s; }
+  @keyframes demRise {
+    0% { transform: translateY(0) scale(0.6); opacity: 0; }
+    15% { opacity: 0.9; }
+    80% { opacity: 0.5; }
+    100% { transform: translateY(-120px) scale(1); opacity: 0; }
+  }
+
+  .dem-badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    border-radius: 50%;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #c8324a 0%, var(--de-red) 60%, #8f0f1d 100%);
+    box-shadow: 0 10px 24px rgba(172, 20, 36, 0.4), 0 0 0 6px rgba(255, 255, 255, 0.08);
+    animation: demBadgeIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.1s backwards;
+  }
+  /* radar ripple rings around the badge */
+  .dem-badge::before,
+  .dem-badge::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1.5px solid rgba(172, 20, 36, 0.45);
+    animation: demRipple 2.8s ease-out infinite;
+  }
+  .dem-badge::after { animation-delay: 1.4s; }
+  .dem-badge img {
+    width: 30px;
+    height: auto;
+    filter: brightness(0) invert(1);
+    animation: demBadgeFloat 3.4s ease-in-out infinite;
+  }
+  @keyframes demBadgeIn {
+    from { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+    to { opacity: 1; transform: scale(1) rotate(0); }
+  }
+  @keyframes demBadgeFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+  }
+  @keyframes demRipple {
+    0% { transform: scale(1); opacity: 0.6; }
+    100% { transform: scale(1.7); opacity: 0; }
+  }
+
+  .dem-head h3 {
+    color: #ffffff !important;
+    font-size: 21px !important;
+    font-weight: 800 !important;
+    margin: 0 0 4px !important;
+    font-family: "Exo", sans-serif !important;
+    animation: demUp 0.5s ease 0.18s backwards;
+  }
+  .dem-head p {
+    color: rgba(255, 255, 255, 0.72) !important;
+    font-size: 13px !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    animation: demUp 0.5s ease 0.26s backwards;
+  }
+
+  /* ---------- Body ---------- */
+  .dem-body { padding: 22px 26px 26px; }
+
+  /* staggered entrance for each row in the form */
+  .dem-body > * { animation: demUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards; }
+  .dem-body > *:nth-child(1) { animation-delay: 0.30s; }
+  .dem-body > *:nth-child(2) { animation-delay: 0.37s; }
+  .dem-body > *:nth-child(3) { animation-delay: 0.44s; }
+  .dem-body > *:nth-child(4) { animation-delay: 0.51s; }
+  .dem-body > *:nth-child(5) { animation-delay: 0.58s; }
+  .dem-body > *:nth-child(6) { animation-delay: 0.65s; }
+  @keyframes demUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dem-field { margin-bottom: 12px; }
+  .dem-field input {
+    width: 100%;
+    height: 48px;
+    border: 1px solid #dce6ee;
+    border-radius: 11px;
+    padding: 0 15px;
+    font-size: 14px;
+    color: var(--de-navy);
+    background: #f7fbfe;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .dem-field input::placeholder { color: #91a3b0; }
+  .dem-field input:focus {
+    outline: none;
+    border-color: var(--de-blue);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(27, 133, 186, 0.15);
+  }
+
+  .dem-forgot {
+    text-align: right;
+    margin: -2px 0 2px;
+  }
+  .dem-forgot a {
+    color: var(--de-red);
+    font-size: 12.5px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .dem-forgot a:hover { text-decoration: underline; }
+
+  .dem-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin: 12px 0 2px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: var(--de-muted);
+    cursor: pointer;
+  }
+  .dem-check input { margin-top: 2px; width: 15px; height: 15px; accent-color: var(--de-red); flex-shrink: 0; }
+
+  .dem-submit {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 50px;
+    margin-top: 16px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #c8324a 0%, var(--de-red) 60%, #8f0f1d 100%);
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 12px 26px rgba(172, 20, 36, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  /* shine sweep across the button on hover */
+  .dem-submit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    transform: skewX(-18deg);
+    transition: left 0.6s ease;
+  }
+  .dem-submit span,
+  .dem-submit iconify-icon { position: relative; z-index: 1; }
+  .dem-submit iconify-icon { font-size: 18px; transition: transform 0.2s ease; }
+  .dem-submit:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(172, 20, 36, 0.38); }
+  .dem-submit:hover::before { left: 130%; }
+  .dem-submit:hover iconify-icon { transform: translateX(3px); }
+
+  .dem-alt {
+    text-align: center;
+    margin: 18px 0 0;
+    font-size: 13.5px;
+    color: var(--de-muted);
+  }
+  .dem-alt button {
+    background: none;
+    border: none;
+    color: var(--de-navy);
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 5px;
+    font-family: "Exo", sans-serif;
+    transition: color 0.2s ease;
+  }
+  .dem-alt button:hover { color: var(--de-red); text-decoration: underline; }
+
+  @keyframes demFade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes demPop {
+    from { opacity: 0; transform: translate(-50%, -46%) scale(0.96); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dem-head-aurora,
+    .dem-head-dots,
+    .dem-badge::before,
+    .dem-badge::after,
+    .dem-badge img { animation: none !important; }
+    .dem-overlay,
+    .dem-modal,
+    .dem-badge,
+    .dem-head h3,
+    .dem-head p,
+    .dem-body > * {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
     }
-    .modal-content {
-      -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    }
-}
+    .dem-modal { transform: translate(-50%, -50%) !important; }
+  }
+
+  @media (max-width: 575px) {
+    .dem-modal { width: 94vw; border-radius: 18px; }
+    .dem-head { padding: 24px 20px 18px; border-radius: 18px 18px 0 0; }
+    .dem-head h3 { font-size: 19px !important; }
+    .dem-body { padding: 20px 18px 22px; }
+  }
 `
